@@ -5,6 +5,7 @@ import (
 	"log"
 	"net"
 	"strconv"
+	"strings"
 	"sync"
 
 	gossh "golang.org/x/crypto/ssh"
@@ -108,6 +109,14 @@ func (h forwardedTCPHandler) HandleRequest(ctx Context, srv *Server, req *gossh.
 		}
 		addr := net.JoinHostPort(reqPayload.BindAddr, strconv.Itoa(int(reqPayload.BindPort)))
 		ln, err := net.Listen("tcp", addr)
+		if srv.ReversePortForwardingCompleteCallback != nil {
+			addressInfo := strings.Split(ln.Addr().String(), ":")
+			portNumber, err := strconv.ParseUint(addressInfo[1], 10, 32)
+			if err != nil {
+				log.Printf("Invalid number for listen port %s", addressInfo[1])
+			}
+			srv.ReversePortForwardingCompleteCallback(ctx, addressInfo[0], uint32(portNumber))
+		}
 		if err != nil {
 			// TODO: log listen failure
 			return false, []byte{}

@@ -2,8 +2,6 @@
 
 This fork adds functionality needed to allow an arbirtray number of ssh clients to reverse forward their ports to the server and to implement a callback for which addresses they are on. 
 
-Currently a WIP
-
 # gliderlabs/ssh
 
 [![GoDoc](https://godoc.org/github.com/gliderlabs/ssh?status.svg)](https://godoc.org/github.com/gliderlabs/ssh) 
